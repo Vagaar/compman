@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #############################################################################
 #
 # Copyright 2014 Dmitry Volovnenko
@@ -31,20 +30,22 @@ isRecursive = False
 # If needed, use -r key compare and to synchronize folders with each other
 # Set -s key for showing files and folders inside target directories with different in they are  
 # In this step, parsing sys.argv with getopt
-opts, args = getopt.getopt(sys.argv[1:],"rsp:h:",["ppath=","hpath="])
+opts, args = getopt.getopt(sys.argv[1:],"rsp:h:")
+# If have not incoming data - get out from here
+if len(opts) == 0:
+	print 'No input paths' # Here, must be more intellectual text, I think so
+	sys.exit(2)
 # and getting needed value
 for opt, arg in opts:
 	if opt == '-r':
 		isRecursive = True 		
 	elif opt == '-s':
 		isShow	= True
-	elif opt in ('-p', '--ppath'):
+	elif opt in '-p':
 		parentFolder = arg
-	elif opt in ('-h', '--hpath'):
+	elif opt in '-h':
 		heirFolder = arg	
-	else:
-		print 'No input paths' # Here, must be more intellectual text, I think so
+# Getting tree of folders and files using os.walk()
 
-# Test	####################################################################################################		
-print 'What we get:\n-p ', parentFolder, '\n-h ', heirFolder, '\n-r = ', isRecursive, '\n-s = ', isShow			
-# End test #################################################################################################
+
+
