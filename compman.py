@@ -19,13 +19,16 @@
 import os
 import sys
 import getopt
+import filecmp
 
 # Variables where saved paths to folders
 parentFolder = ''
 heirFolder = ''
+
 # Boolean variables for options(printing lists with diff, compare and synchronize with each other)
 isShow = False
 isRecursive = False
+
 # Use -p(parent) and -h(heir) keys to set folders passes through command-line
 # If needed, use -r key compare and to synchronize folders with each other
 # Set -s key for showing files and folders inside target directories with different in they are  
@@ -45,7 +48,7 @@ for opt, arg in opts:
 		parentFolder = arg
 	elif opt in '-h':
 		heirFolder = arg	
-# Getting tree of folders and files using os.walk()
 
-
-
+# Compare folders
+d_comp = filecmp.dircmp(parentFolder, heirFolder)
+d_comp.report()
