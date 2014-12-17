@@ -3,10 +3,9 @@ compman
 
 Folder synchronization tool (Simple)
 
-Pass two folder names through command line to this script 
-and chose from listed menu:
+Use -p(parent) and -h(heir) keys to set folders passes through command-line
 
-1. Show compare results
-2. Choose main folder and synchronized
-3. Synchronized with each other
-0. Quit
+	$: compman -p </path/one> -h </path/two>
+
+If needed, use -r key to compare and synchronize folders with each other
+Set -s key for showing files and folders inside target directories with different in they are
