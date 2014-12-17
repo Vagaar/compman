@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #############################################################################
 #
 # Copyright 2014 Dmitry Volovnenko
@@ -15,3 +16,35 @@
 # limitations under the License.
 #
 #############################################################################
+
+import os
+import sys
+import getopt
+
+# Variables where saved paths to folders
+parentFolder = ''
+heirFolder = ''
+# Boolean variables for options(printing lists with diff, compare and synchronize with each other)
+isShow = False
+isRecursive = False
+# Use -p(parent) and -h(heir) keys to set folders passes through command-line
+# If needed, use -r key compare and to synchronize folders with each other
+# Set -s key for showing files and folders inside target directories with different in they are  
+# In this step, parsing sys.argv with getopt
+opts, args = getopt.getopt(sys.argv[1:],"rsp:h:",["ppath=","hpath="])
+# and getting needed value
+for opt, arg in opts:
+	if opt == '-r':
+		isRecursive = True 		
+	elif opt == '-s':
+		isShow	= True
+	elif opt in ('-p', '--ppath'):
+		parentFolder = arg
+	elif opt in ('-h', '--hpath'):
+		heirFolder = arg	
+	else:
+		print 'No input paths' # Here, must be more intellectual text, I think so
+
+# Test	####################################################################################################		
+print 'What we get:\n-p ', parentFolder, '\n-h ', heirFolder, '\n-r = ', isRecursive, '\n-s = ', isShow			
+# End test #################################################################################################
