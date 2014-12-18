@@ -22,10 +22,6 @@ import getopt
 import filecmp
 import shutil
 
-# Variables where saved paths to folders
-parentFolder = ''
-heirFolder = ''
-
 # Getting subdirs
 def getSubdir(folder):
     return [item for item in os.listdir(folder)
@@ -43,39 +39,47 @@ def syncFolders(parent, heir):
 		else:
 			shutil.copyfile(os.path.join(parent, item), os.path.join(heir, item))
 	
+def main():
+	# Variables where saved paths to folders
+	parentFolder = ''
+	heirFolder = ''
+	
+	# Boolean variables for options(printing lists with diff, compare and synchronize with each other)
+	isShow = False
+	isRecursive = False
 
-# Boolean variables for options(printing lists with diff, compare and synchronize with each other)
-isShow = False
-isRecursive = False
+	# Use -p(parent) and -h(heir) keys to set folders passes through command-line
+	# If needed, use -r key compare and to synchronize folders with each other
+	# Set -s key for showing files and folders inside target directories with different in they are  
+	# In this step, parsing sys.argv with getopt
+	opts, args = getopt.getopt(sys.argv[1:],"rsp:h:")
+	# If have not incoming data - get out from here
+	if len(opts) == 0:
+		print 'No input paths' # Here, must be more intellectual text, I think so
+		sys.exit(2)
+	# and getting needed value
+	for opt, arg in opts:
+		if opt == '-r':
+			isRecursive = True 		
+		elif opt == '-s':
+			isShow	= True
+		elif opt in '-p':
+			parentFolder = arg
+		elif opt in '-h':
+			heirFolder = arg	
 
-# Use -p(parent) and -h(heir) keys to set folders passes through command-line
-# If needed, use -r key compare and to synchronize folders with each other
-# Set -s key for showing files and folders inside target directories with different in they are  
-# In this step, parsing sys.argv with getopt
-opts, args = getopt.getopt(sys.argv[1:],"rsp:h:")
-# If have not incoming data - get out from here
-if len(opts) == 0:
-	print 'No input paths' # Here, must be more intellectual text, I think so
-	sys.exit(2)
-# and getting needed value
-for opt, arg in opts:
-	if opt == '-r':
-		isRecursive = True 		
-	elif opt == '-s':
-		isShow	= True
-	elif opt in '-p':
-		parentFolder = arg
-	elif opt in '-h':
-		heirFolder = arg	
+	# Checking folder paths
+	if len(parentFolder) == 0 or len(heirFolder) == 0:
+		print 'No input paths' # one more, here, must be more intellectual text, I think so
+		sys.exit(2)
+	# synchronize folders
+	syncFolders(parentFolder, heirFolder)
 
-# Checking folder paths
-if len(parentFolder) == 0 or len(heirFolder) == 0:
-	print 'No input paths' # one more, here, must be more intellectual text, I think so
-	sys.exit(2)
-# synchronize folders
-syncFolders(parentFolder, heirFolder)
+	if isRecursive:
+		syncFolders(heirFolder, parentFolder)
+		
 
-if isRecursive:
-	syncFolders(heirFolder, parentFolder)
+if __name__ == '__main__':
+    main()
 	
 	
