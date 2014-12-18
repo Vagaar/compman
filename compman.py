@@ -25,19 +25,21 @@ import shutil
 # Variables where saved paths to folders
 parentFolder = ''
 heirFolder = ''
+
 # Getting subdirs
-def getSubdir(a_dir):
-    return [name for name in os.listdir(a_dir)
-            if os.path.isdir(os.path.join(a_dir, name))]
+def getSubdir(folder):
+    return [item for item in os.listdir(folder)
+            if os.path.isdir(os.path.join(folder, item))]
+
 # Function for synchronize folders 
 def syncFolders(parent, heir):
 	d_comp = filecmp.dircmp(parent, heir)
 	subdirList = getSubdir(parent)
-	for dirItem in d_comp.common_dirs:
+	for dirItem in d_comp.common_dirs: # if have common dirs - go inside recursive
 		syncFolders(os.path.join(parent, dirItem), os.path.join(heir, dirItem))
-	for item in d_comp.left_only:
+	for item in d_comp.left_only: # copying dirs and files from parent to heir folder
 		if item in subdirList:
-			shutil.copytree(os.path.join(parent, item), os.path.join(heir, item))
+			shutil.copytree(os.path.join(parent, item), os.path.join(heir, item)) # dir copying with full tree inside
 		else:
 			shutil.copyfile(os.path.join(parent, item), os.path.join(heir, item))
 	
@@ -71,5 +73,9 @@ if len(parentFolder) == 0 or len(heirFolder) == 0:
 	print 'No input paths' # one more, here, must be more intellectual text, I think so
 	sys.exit(2)
 # synchronize folders
-
 syncFolders(parentFolder, heirFolder)
+
+if isRecursive:
+	syncFolders(heirFolder, parentFolder)
+	
+	
