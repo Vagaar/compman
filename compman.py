@@ -20,10 +20,27 @@ import os
 import sys
 import getopt
 import filecmp
+import shutil
 
 # Variables where saved paths to folders
 parentFolder = ''
 heirFolder = ''
+# Getting subdirs
+def getSubdir(a_dir):
+    return [name for name in os.listdir(a_dir)
+            if os.path.isdir(os.path.join(a_dir, name))]
+# Function for synchronize folders 
+def syncFolders(parent, heir):
+	d_comp = filecmp.dircmp(parent, heir)
+	subdirList = getSubdir(parent)
+	for dirItem in d_comp.common_dirs:
+		syncFolders(os.path.join(parent, dirItem), os.path.join(heir, dirItem))
+	for item in d_comp.left_only:
+		if item in subdirList:
+			shutil.copytree(os.path.join(parent, item), os.path.join(heir, item))
+		else:
+			shutil.copyfile(os.path.join(parent, item), os.path.join(heir, item))
+	
 
 # Boolean variables for options(printing lists with diff, compare and synchronize with each other)
 isShow = False
@@ -49,6 +66,10 @@ for opt, arg in opts:
 	elif opt in '-h':
 		heirFolder = arg	
 
-# Compare folders
-d_comp = filecmp.dircmp(parentFolder, heirFolder)
-d_comp.report()
+# Checking folder paths
+if len(parentFolder) == 0 or len(heirFolder) == 0:
+	print 'No input paths' # one more, here, must be more intellectual text, I think so
+	sys.exit(2)
+# synchronize folders
+
+syncFolders(parentFolder, heirFolder)
